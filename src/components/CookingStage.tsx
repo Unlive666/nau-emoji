@@ -65,6 +65,8 @@ export function CookingStage({
   shareBusy,
 }: CookingStageProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const imgRef = useRef<HTMLImageElement | null>(null);
+  const prevProxyUrlRef = useRef<string>("");
   const prevTextRef = useRef(memeConfig.text);
   const [imgStatus, setImgStatus] = useState<"loading" | "ready" | "error">(
     "loading",
@@ -75,6 +77,8 @@ export function CookingStage({
   );
   const [canvasRetrySeed, setCanvasRetrySeed] = useState(0);
 
+  const currentProxyUrl = combo?.proxyUrl ?? "";
+
   const showCanvas =
     memeConfig.enabled &&
     (memeConfig.whiteOutline ||
@@ -82,16 +86,26 @@ export function CookingStage({
       memeConfig.bgStyle !== "transparent");
 
   useEffect(() => {
-    if (!showCanvas && combo) {
-      setImgStatus("loading");
+    if (!showCanvas && currentProxyUrl) {
+      if (
+        prevProxyUrlRef.current === currentProxyUrl ||
+        (imgRef.current?.complete && imgRef.current.naturalWidth > 0)
+      ) {
+        setImgStatus("ready");
+      } else {
+        setImgStatus("loading");
+      }
+      prevProxyUrlRef.current = currentProxyUrl;
+    } else if (!currentProxyUrl) {
+      prevProxyUrlRef.current = "";
     }
-  }, [combo, showCanvas, imgRetrySeed]);
+  }, [currentProxyUrl, showCanvas, imgRetrySeed]);
 
   useEffect(() => {
     const textChanged = prevTextRef.current !== memeConfig.text;
     prevTextRef.current = memeConfig.text;
 
-    if (!showCanvas || !combo || !canvasRef.current) {
+    if (!showCanvas || !currentProxyUrl || !canvasRef.current) {
       setCanvasState("loading");
       return;
     }
@@ -105,7 +119,7 @@ export function CookingStage({
       if (controller.signal.aborted || !canvasRef.current) return;
       renderStickerToCanvas(
         canvasRef.current,
-        combo.proxyUrl,
+        currentProxyUrl,
         memeConfig,
         512,
         controller.signal,
@@ -132,7 +146,7 @@ export function CookingStage({
       controller.abort();
       if (timer !== null) window.clearTimeout(timer);
     };
-  }, [showCanvas, combo, memeConfig, canvasRetrySeed]);
+  }, [showCanvas, currentProxyUrl, memeConfig, canvasRetrySeed]);
 
   return (
     <section
@@ -334,6 +348,7 @@ export function CookingStage({
                   <>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
+                      ref={imgRef}
                       key={`${combo.proxyUrl}-${imgRetrySeed}`}
                       src={combo.proxyUrl}
                       alt={`Sticker trộn từ ${combo.left.viLabel} và ${combo.right.viLabel}`}
