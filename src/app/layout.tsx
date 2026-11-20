@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import { Baloo_2, Nunito } from "next/font/google";
 import { getSiteUrl } from "@/lib/site-url";
 import "./globals.css";
@@ -94,6 +95,7 @@ export default function RootLayout({
       </head>
       <body className="antialiased selection:bg-[#FFD6E5] selection:text-[#2D1D42]">
         {children}
+        <Analytics />
       </body>
     </html>
   );
