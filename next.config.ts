@@ -6,7 +6,7 @@ const cspDirectives = [
   "default-src 'self'",
   `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob: https://fonts.gstatic.com https://www.gstatic.com",
+  "img-src 'self' data: blob: https://fonts.gstatic.com",
   "font-src 'self' data:",
   "connect-src 'self'",
   "object-src 'none'",

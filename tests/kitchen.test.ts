@@ -288,6 +288,16 @@ test("buildValidatedStickerUrl enforces strict SSRF whitelist, length & repeat b
 });
 
 test("GET /api/sticker validates params, enforces headers, and maps upstream errors safely", async () => {
+  // 0. Chống hotlink từ trang web khác (Sec-Fetch-Site: cross-site) -> 403
+  const hotlinkRes = await getStickerRoute(
+    new NextRequest("http://localhost:3000/api/sticker?d=20230301&l=u1f600&r=u2615", {
+      headers: { "sec-fetch-site": "cross-site" },
+    }),
+  );
+  assert.equal(hotlinkRes.status, 403);
+  assert.equal(hotlinkRes.headers.get("cache-control"), "no-store");
+  assert.equal(hotlinkRes.headers.get("x-content-type-options"), "nosniff");
+
   // 1. Tham số không hợp lệ -> 400
   const badRes = await getStickerRoute(
     new NextRequest("http://localhost:3000/api/sticker?d=bad&l=u1f600&r=u2615"),
@@ -325,6 +335,7 @@ test("GET /api/sticker validates params, enforces headers, and maps upstream err
       "public, max-age=31536000, s-maxage=31536000, immutable",
     );
     assert.equal(okRes.headers.get("x-content-type-options"), "nosniff");
+    assert.equal(okRes.headers.get("vary"), "Sec-Fetch-Site");
     assert.deepEqual(new Uint8Array(await okRes.arrayBuffer()), fakePng);
 
     // 3. Upstream 404 -> 404 với cache ngắn 300s

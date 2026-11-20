@@ -44,6 +44,21 @@ async function readLimitedBytes(
 }
 
 export async function GET(request: NextRequest) {
+  const secFetchSite = (request.headers.get("sec-fetch-site") ?? "").toLowerCase();
+  if (secFetchSite === "cross-site") {
+    return NextResponse.json(
+      { error: "Không cho phép nhúng ảnh từ tên miền khác" },
+      {
+        status: 403,
+        headers: {
+          "Cache-Control": "no-store",
+          "X-Content-Type-Options": "nosniff",
+          Vary: "Sec-Fetch-Site",
+        },
+      },
+    );
+  }
+
   const upstreamUrl = buildValidatedStickerUrl(request.nextUrl.searchParams);
   if (!upstreamUrl) {
     return NextResponse.json(
@@ -75,6 +90,7 @@ export async function GET(request: NextRequest) {
           headers: {
             "Cache-Control": isNotFound ? "public, max-age=300" : "no-store",
             "X-Content-Type-Options": "nosniff",
+            Vary: "Sec-Fetch-Site",
           },
         },
       );
@@ -133,6 +149,7 @@ export async function GET(request: NextRequest) {
         "Content-Type": "image/png",
         "Cache-Control": "public, max-age=31536000, s-maxage=31536000, immutable",
         "X-Content-Type-Options": "nosniff",
+        Vary: "Sec-Fetch-Site",
       },
     });
   } catch {
