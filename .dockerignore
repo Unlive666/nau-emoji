@@ -1,0 +1,9 @@
+.cache/
+.next/
+.git/
+node_modules/
+out/
+dist/
+tests/
+.env*.local
+*.tsbuildinfo

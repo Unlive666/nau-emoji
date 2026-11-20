@@ -1,0 +1,203 @@
+@import "tailwindcss";
+
+:root {
+  --bg-cream: #FFF9F0;
+  --bg-peach: #FFEFE2;
+  --ink-plum: #2D1D42;
+  --ink-muted: #5B4B73;
+  --candy-berry: #C9225F;
+  --candy-berry-dark: #A6184C;
+  --candy-mango: #FFB830;
+  --candy-mint: #38D3C6;
+  --candy-grape: #6140EB;
+}
+
+html {
+  background-color: var(--bg-cream);
+  color: var(--ink-plum);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  font-family: var(--font-nunito), system-ui, -apple-system, sans-serif;
+  background-color: var(--bg-cream);
+  background-image:
+    radial-gradient(circle at 12% 8%, rgba(255, 184, 48, 0.16), transparent 28%),
+    radial-gradient(circle at 88% 12%, rgba(255, 92, 147, 0.15), transparent 30%),
+    radial-gradient(circle at 50% 88%, rgba(56, 211, 198, 0.14), transparent 36%);
+  min-height: 100dvh;
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.font-display {
+  font-family: var(--font-baloo), var(--font-nunito), system-ui, sans-serif;
+}
+
+/* Clay 3D Card & Button System */
+.clay-card {
+  background: rgba(255, 255, 255, 0.92);
+  border: 2.5px solid rgba(255, 255, 255, 0.95);
+  border-radius: 28px;
+  box-shadow:
+    0 14px 32px -10px rgba(84, 44, 114, 0.16),
+    inset 0 -6px 0 rgba(236, 224, 246, 0.75),
+    inset 0 4px 10px rgba(255, 255, 255, 0.9);
+}
+
+.clay-slot {
+  background: linear-gradient(180deg, #FFFFFF 0%, #FFF3EC 100%);
+  border: 3px solid #F6E5F5;
+  border-radius: 24px;
+  box-shadow:
+    0 8px 18px -6px rgba(84, 44, 114, 0.14),
+    inset 0 -4px 0 rgba(242, 221, 238, 0.75);
+  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.clay-slot-active {
+  border-color: var(--candy-berry);
+  background: linear-gradient(180deg, #FFF7FA 0%, #FFE4EE 100%);
+  box-shadow:
+    0 10px 24px -6px rgba(255, 92, 147, 0.34),
+    inset 0 -4px 0 rgba(255, 194, 217, 0.9);
+}
+
+.clay-btn {
+  border-radius: 9999px;
+  font-weight: 800;
+  transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.15s ease, background-color 0.15s ease;
+  box-shadow:
+    0 6px 0 rgba(45, 29, 66, 0.14),
+    0 10px 18px -6px rgba(45, 29, 66, 0.16);
+}
+
+.clay-btn:active:not(:disabled) {
+  transform: translateY(3px) scale(0.97);
+  box-shadow:
+    0 2px 0 rgba(45, 29, 66, 0.14),
+    0 4px 8px -4px rgba(45, 29, 66, 0.14);
+}
+
+.clay-btn-primary {
+  background: linear-gradient(180deg, #DC2F6D 0%, #BC1D58 100%);
+  color: #FFFFFF;
+  box-shadow:
+    0 5px 0 #8E1241,
+    0 12px 20px -6px rgba(188, 29, 88, 0.42);
+}
+
+.clay-btn-primary:active:not(:disabled) {
+  transform: translateY(3px) scale(0.98);
+  box-shadow:
+    0 2px 0 #8E1241,
+    0 5px 10px -4px rgba(188, 29, 88, 0.36);
+}
+
+.clay-btn-mint {
+  background: linear-gradient(180deg, #63EAE0 0%, #32C9BC 100%);
+  color: #083A35;
+  box-shadow:
+    0 5px 0 #1C968B,
+    0 12px 20px -6px rgba(46, 196, 182, 0.42);
+}
+
+.clay-btn-mint:active:not(:disabled) {
+  transform: translateY(3px) scale(0.98);
+  box-shadow:
+    0 2px 0 #1C968B,
+    0 5px 10px -4px rgba(46, 196, 182, 0.35);
+}
+
+.clay-btn-mango {
+  background: linear-gradient(180deg, #FFD15C 0%, #FFA927 100%);
+  color: #3D2205;
+  box-shadow:
+    0 5px 0 #D9820B,
+    0 12px 20px -6px rgba(255, 169, 39, 0.4);
+}
+
+.clay-btn-mango:active:not(:disabled) {
+  transform: translateY(3px) scale(0.98);
+  box-shadow:
+    0 2px 0 #D9820B,
+    0 5px 10px -4px rgba(255, 169, 39, 0.32);
+}
+
+.checkerboard-bg {
+  background-color: #FFFDFB;
+  background-image:
+    linear-gradient(45deg, #F5ECF7 25%, transparent 25%),
+    linear-gradient(-45deg, #F5ECF7 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #F5ECF7 75%),
+    linear-gradient(-45deg, transparent 75%, #F5ECF7 75%);
+  background-size: 20px 20px;
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0;
+}
+
+/* Performance: skip layout/paint for offscreen emoji tiles */
+.emoji-tile-perf {
+  content-visibility: auto;
+  contain-intrinsic-size: 56px 56px;
+}
+
+/* Native <dialog> modal scroll containment & backdrop animation */
+dialog:modal {
+  overscroll-behavior: contain;
+  margin: auto;
+}
+
+dialog::backdrop {
+  overflow: hidden;
+  overscroll-behavior: contain;
+  background: rgba(45, 29, 66, 0.42);
+  backdrop-filter: blur(4px);
+}
+
+/* Motion only for users without reduced-motion preference */
+@keyframes cookPop {
+  0% {
+    transform: scale(0.74) rotate(-6deg);
+    opacity: 0.3;
+  }
+  65% {
+    transform: scale(1.07) rotate(2deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes floatGentle {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .animate-cook-pop {
+    animation: cookPop 0.36s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+  .animate-float-gentle {
+    animation: floatGentle 3.2s ease-in-out infinite;
+  }
+}
+
+/* Hide scrollbars nicely for horizontal chip strips */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
